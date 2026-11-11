@@ -111,7 +111,7 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                 Fulfillment
               </legend>
               <div className="flex flex-col items-center gap-3 lg:items-start">
-                <label className="flex w-full max-w-sm items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800">
+                <label className="flex w-56 items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800">
                   <input
                     type="radio"
                     value="pickup"
@@ -130,7 +130,7 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                   />
                   Pickup ($0)
                 </label>
-                <label className="flex w-full max-w-sm items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800">
+                <label className="flex w-56 items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800">
                   <input
                     type="radio"
                     value="delivery"
@@ -160,7 +160,7 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                 Extras
               </legend>
               <div className="flex flex-col items-center gap-3 lg:items-start">
-                <div className="w-full max-w-sm space-y-1">
+                <div className="w-56 space-y-1">
                   <label className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800">
                     <input
                       type="checkbox"
@@ -186,7 +186,7 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                   ) : null}
                 </div>
 
-                <label className="flex w-full max-w-sm items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800">
+                <label className="flex w-56 items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800">
                   <input
                     type="checkbox"
                     className="accent-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900"
