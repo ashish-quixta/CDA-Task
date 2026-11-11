@@ -47,7 +47,7 @@ npm test
 
 ## Time spent
 
-- Total: ~3 hours
+- Total: ~4 hours
 
 ## Extra work
 
