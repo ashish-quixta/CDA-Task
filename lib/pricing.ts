@@ -9,7 +9,7 @@ export type Selection = {
 export const SHELF = {
   name: "Linden shelf",
   description:
-    "A solid linden shelf with a clean, minimal profile for books and plants.",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   price: 180,
 } as const;
 

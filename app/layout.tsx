@@ -20,8 +20,7 @@ const display = Libre_Baskerville({
 
 export const metadata: Metadata = {
   title: "Linden shelf",
-  description:
-    "A solid linden shelf with a clean, minimal profile for books and plants.",
+  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
