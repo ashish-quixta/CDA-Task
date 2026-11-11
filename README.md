@@ -2,9 +2,28 @@
 
 A product page for the Linden shelf with an order sheet where shoppers choose fulfillment and extras, see a live total, and confirm the order.
 
+## Live demo
+
+https://cda-task.vercel.app/
+
+## Stack
+
+- Next.js (App Router)
+- React
+- TypeScript
+- Tailwind CSS
+- react-hook-form
+- zod
+- @hookform/resolvers
+- Vitest + React Testing Library (`@testing-library/react`, `@testing-library/user-event`, `@testing-library/jest-dom`)
+- react-icons
+
+**Package manager:** npm
+
 ## Requirements
 
-- Node `v24.14.1` (this project needs Node 20.9 or newer)
+- Node version used: `v24.14.1`
+- Needs Node 20.9 or newer
 
 ## Install
 
@@ -28,24 +47,10 @@ npm test
 
 ## Time spent
 
-- Start: [fill in]
-- End: [fill in]
-- Total: [fill in]
+- Total: ~3 hours
 
-## Decisions
+## Extra work
 
-- Form state lives in react-hook-form. Derived values use `useWatch` and pure functions.
-- The dialog uses the native `<dialog>` element for focus management and Escape handling.
-- Pricing is a pure module. The total is derived from line items, so the total and the confirmation always match.
-- Assembly is rejected by the zod schema and also cleared in the UI when Pickup is chosen.
-
-## Known gaps
-
-- No end-to-end browser test for Escape (jsdom does not simulate native dialog close on Escape).
-- No persistence across reloads.
-
-## Next steps
-
-- A real cart
-- End-to-end keyboard tests with Playwright
-- A server-side price check
+- Added a third test for the missing-fulfillment validation error
+- Used `react-icons` for cart and option icons
+- Fully responsive layout for product page and order dialog
