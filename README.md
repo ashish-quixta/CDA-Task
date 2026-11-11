@@ -53,4 +53,4 @@ npm test
 
 - Added a third test for the missing-fulfillment validation error
 - Used `react-icons` for cart and option icons
-- Fully responsive layout for product page and order dialog
+- Fully responsive layout with a small custom visual design for the product page and order dialog
