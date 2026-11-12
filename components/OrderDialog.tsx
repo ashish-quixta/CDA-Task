@@ -22,7 +22,7 @@ const emptyDefaults = {
 } as const;
 
 const optionClass =
-  "flex w-56 items-center gap-2 rounded-md border-[2px] border-border bg-card px-3 py-2 text-sm text-border shadow-[2px_2px_0_0_var(--border)]";
+  "flex w-full max-w-56 items-center gap-2 rounded-md border-[2px] border-border bg-card px-2.5 py-1.5 text-xs text-border shadow-[2px_2px_0_0_var(--border)] md:px-3 md:py-2 md:text-sm";
 
 export default function OrderDialog({ open, onClose }: OrderDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -87,10 +87,10 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
       ref={dialogRef}
       aria-labelledby="order-dialog-title"
       onClose={onClose}
-      className="m-auto w-[calc(100%-2rem)] max-w-3xl overflow-hidden rounded-md border-[3px] border-border bg-card p-0 text-border shadow-[6px_6px_0_0_var(--border)] backdrop:bg-black/45 open:flex open:flex-col"
+      className="m-auto w-[calc(100%-2rem)] max-w-3xl overflow-hidden rounded-md border-[3px] border-border bg-card p-0 text-border shadow-[6px_6px_0_0_var(--border)] backdrop:bg-black/40 backdrop:backdrop-blur-sm open:flex open:flex-col"
     >
       {confirmed ? (
-        <div className="p-6 sm:p-8">
+        <div className="p-4 sm:p-8">
           <OrderConfirmation order={confirmed} onDone={handleDone} />
         </div>
       ) : (
@@ -99,24 +99,24 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
           onSubmit={handleSubmit(onValid)}
           className="grid grid-cols-1 md:grid-cols-2"
         >
-          <div className="space-y-6 border-b-[3px] border-border p-6 md:border-b-0 md:border-r-[3px] sm:p-7">
+          <div className="space-y-3 border-b-[3px] border-border p-3 md:space-y-6 md:border-b-0 md:border-r-[3px] md:p-7">
             <h2
               id="order-dialog-title"
-              className="font-[family-name:var(--font-display)] text-2xl font-bold text-border"
+              className="font-[family-name:var(--font-display)] text-lg font-bold text-border md:text-2xl"
             >
               Configure your shelf
             </h2>
 
             <fieldset
-              className="space-y-3 border-0 p-0"
+              className="space-y-2 border-0 p-0 md:space-y-3"
               aria-describedby={
                 errors.fulfillment ? "fulfillment-error" : undefined
               }
             >
-              <legend className="mb-2 text-xs font-semibold tracking-[0.14em] text-[#7a3b32] uppercase">
+              <legend className="mb-1 text-[10px] font-semibold tracking-[0.14em] text-[#7a3b32] uppercase md:mb-2 md:text-xs">
                 Fulfillment
               </legend>
-              <div className="flex flex-col items-center gap-3 lg:items-start">
+              <div className="flex flex-col items-center gap-2 md:gap-3 lg:items-start">
                 <label className={optionClass}>
                   <input
                     type="radio"
@@ -132,7 +132,7 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                   />
                   <MdStorefront
                     aria-hidden="true"
-                    className="size-4 text-cta"
+                    className="size-3.5 text-cta md:size-4"
                   />
                   Pickup ($0)
                 </label>
@@ -145,7 +145,7 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                   />
                   <MdLocalShipping
                     aria-hidden="true"
-                    className="size-4 text-cta"
+                    className="size-3.5 text-cta md:size-4"
                   />
                   Delivery ($25)
                 </label>
@@ -154,19 +154,19 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                 <p
                   id="fulfillment-error"
                   role="alert"
-                  className="text-sm font-medium text-cta"
+                  className="text-xs font-medium text-cta md:text-sm"
                 >
                   {errors.fulfillment.message}
                 </p>
               ) : null}
             </fieldset>
 
-            <fieldset className="space-y-3 border-0 p-0">
-              <legend className="mb-2 text-xs font-semibold tracking-[0.14em] text-[#7a3b32] uppercase">
+            <fieldset className="space-y-2 border-0 p-0 md:space-y-3">
+              <legend className="mb-1 text-[10px] font-semibold tracking-[0.14em] text-[#7a3b32] uppercase md:mb-2 md:text-xs">
                 Extras
               </legend>
-              <div className="flex flex-col items-center gap-3 lg:items-start">
-                <div className="w-56 space-y-1">
+              <div className="flex flex-col items-center gap-2 md:gap-3 lg:items-start">
+                <div className="w-full max-w-56 space-y-0.5">
                   <label className={optionClass}>
                     <input
                       type="checkbox"
@@ -178,15 +178,15 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                     />
                     <MdHandyman
                       aria-hidden="true"
-                      className="size-4 text-cta"
+                      className="size-3.5 text-cta md:size-4"
                     />
                     Assembly ($40)
                   </label>
-                  <p id="assembly-hint" className="text-xs text-muted">
+                  <p id="assembly-hint" className="text-[10px] text-muted md:text-xs">
                     Available with delivery only.
                   </p>
                   {errors.assembly?.message ? (
-                    <p role="alert" className="text-sm font-medium text-cta">
+                    <p role="alert" className="text-xs font-medium text-cta md:text-sm">
                       {errors.assembly.message}
                     </p>
                   ) : null}
@@ -198,39 +198,39 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                     className="accent-cta focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border"
                     {...register("hardwareKit")}
                   />
-                  <FiTool aria-hidden="true" className="size-4 text-cta" />
+                  <FiTool aria-hidden="true" className="size-3.5 text-cta md:size-4" />
                   Hardware kit ($30)
                 </label>
               </div>
             </fieldset>
 
-            <div className="flex flex-wrap gap-3 border-t-[2px] border-border pt-4">
+            <div className="flex flex-wrap gap-2 border-t-[2px] border-border pt-2 md:gap-3 md:pt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-md border-[2px] border-border bg-panel px-4 py-2 text-sm font-semibold text-border shadow-[2px_2px_0_0_var(--border)] transition hover:bg-card focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border"
+                className="rounded-md border-[2px] border-border bg-panel px-3 py-1.5 text-xs font-semibold text-border shadow-[2px_2px_0_0_var(--border)] transition hover:bg-card focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border md:px-4 md:py-2 md:text-sm"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-md border-[2px] border-border bg-cta px-4 py-2 text-sm font-bold tracking-wide text-white uppercase shadow-[3px_3px_0_0_var(--border)] transition hover:bg-cta-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border"
+                className="inline-flex items-center gap-1.5 rounded-md border-[2px] border-border bg-cta px-3 py-1.5 text-xs font-bold tracking-wide text-white uppercase shadow-[3px_3px_0_0_var(--border)] transition hover:bg-cta-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border md:gap-2 md:px-4 md:py-2 md:text-sm"
               >
-                <HiOutlineShoppingCart aria-hidden="true" className="size-4" />
+                <HiOutlineShoppingCart aria-hidden="true" className="size-3.5 md:size-4" />
                 Add to order
               </button>
             </div>
           </div>
 
-          <aside className="bg-panel p-6 sm:p-7">
-            <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-border">
+          <aside className="bg-panel p-3 md:p-7">
+            <h3 className="font-[family-name:var(--font-display)] text-base font-bold text-border md:text-xl">
               Order summary
             </h3>
-            <ul className="mt-6 space-y-3 rounded-md border-[2px] border-border bg-card p-4 shadow-[2px_2px_0_0_var(--border)]">
+            <ul className="mt-2 space-y-1 rounded-md border-[2px] border-border bg-card p-2.5 shadow-[2px_2px_0_0_var(--border)] md:mt-6 md:space-y-3 md:p-4">
               {lineItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex items-center justify-between text-sm text-muted"
+                  className="flex items-center justify-between text-xs text-muted md:text-sm"
                 >
                   <span>{item.label}</span>
                   <span className="font-semibold text-border">
@@ -239,13 +239,13 @@ export default function OrderDialog({ open, onClose }: OrderDialogProps) {
                 </li>
               ))}
             </ul>
-            <div className="mt-6 flex items-center justify-between border-t-[2px] border-border pt-4">
-              <span className="text-sm font-semibold tracking-wide text-border uppercase">
+            <div className="mt-2 flex items-center justify-between border-t-[2px] border-border pt-2 md:mt-6 md:pt-4">
+              <span className="text-xs font-semibold tracking-wide text-border uppercase md:text-sm">
                 Total
               </span>
               <output
                 aria-live="polite"
-                className="font-[family-name:var(--font-display)] text-2xl font-bold text-border"
+                className="font-[family-name:var(--font-display)] text-lg font-bold text-border md:text-2xl"
               >
                 {formatUsd(total)}
               </output>
