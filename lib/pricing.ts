@@ -1,3 +1,5 @@
+import type { Product } from "@/lib/product";
+
 export type Fulfillment = "pickup" | "delivery";
 
 export type Selection = {
@@ -6,46 +8,77 @@ export type Selection = {
   hardwareKit: boolean;
 };
 
-export const SHELF = {
-  name: "Linden shelf",
-  description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  price: 180,
-} as const;
+export type LineItem = {
+  id: string;
+  label: string;
+  amountCents: number;
+};
 
 export function getLineItems(
+  product: Product,
   sel: Selection,
-): { id: string; label: string; amount: number }[] {
-  const items: { id: string; label: string; amount: number }[] = [
-    { id: "shelf", label: SHELF.name, amount: SHELF.price },
+): LineItem[] {
+  const items: LineItem[] = [
+    { id: "shelf", label: product.name, amountCents: product.priceCents },
   ];
 
-  if (sel.fulfillment === "pickup") {
-    items.push({ id: "fulfillment", label: "Pickup", amount: 0 });
-  } else if (sel.fulfillment === "delivery") {
-    items.push({ id: "fulfillment", label: "Delivery", amount: 25 });
+  const fulfillment = product.fulfillment.find(
+    (option) => option.code === sel.fulfillment,
+  );
+  if (fulfillment) {
+    items.push({
+      id: "fulfillment",
+      label: fulfillment.label,
+      amountCents: fulfillment.priceCents,
+    });
   }
 
-  if (sel.fulfillment === "delivery" && sel.assembly) {
-    items.push({ id: "assembly", label: "Assembly", amount: 40 });
+  const assembly = product.extras.find((extra) => extra.code === "assembly");
+  if (sel.fulfillment === "delivery" && sel.assembly && assembly) {
+    items.push({
+      id: "assembly",
+      label: assembly.label,
+      amountCents: assembly.priceCents,
+    });
   }
 
-  if (sel.hardwareKit) {
-    items.push({ id: "hardware-kit", label: "Hardware kit", amount: 30 });
+  const hardware = product.extras.find((extra) => extra.code === "hardware");
+  if (sel.hardwareKit && hardware) {
+    items.push({
+      id: "hardware",
+      label: hardware.label,
+      amountCents: hardware.priceCents,
+    });
   }
 
   return items;
 }
 
-export function calcTotal(sel: Selection): number {
-  return getLineItems(sel).reduce((sum, item) => sum + item.amount, 0);
+/** Confirmation lists fulfillment + selected extras only (not the shelf). */
+export function getConfirmationItems(
+  product: Product,
+  sel: Selection,
+): LineItem[] {
+  return getLineItems(product, sel).filter((item) => item.id !== "shelf");
 }
 
-export function formatUsd(n: number): string {
+export function calcTotalCents(product: Product, sel: Selection): number {
+  return getLineItems(product, sel).reduce(
+    (sum, item) => sum + item.amountCents,
+    0,
+  );
+}
+
+/** Format cents as USD with no fractional cents, e.g. 27500 → "$275". */
+export function formatUsd(cents: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(n);
+  }).format(cents / 100);
+}
+
+export function optionLabel(label: string, priceCents: number): string {
+  return `${label} (${formatUsd(priceCents)})`;
 }

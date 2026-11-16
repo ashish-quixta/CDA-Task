@@ -1,13 +1,53 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { HiOutlineShoppingCart } from "react-icons/hi2";
-import { SHELF, formatUsd } from "@/lib/pricing";
+import { useEffect, useRef, useState } from "react";
+import type { Product } from "@/lib/product";
+import { formatUsd } from "@/lib/pricing";
 import OrderDialog from "@/components/OrderDialog";
 
+type LoadState =
+  | { status: "loading" }
+  | { status: "error" }
+  | { status: "ready"; product: Product };
+
+async function fetchProduct(): Promise<Product> {
+  const response = await fetch("/api/product");
+  if (!response.ok) {
+    throw new Error("unavailable");
+  }
+  return (await response.json()) as Product;
+}
+
 export default function ProductPage() {
+  const [state, setState] = useState<LoadState>({ status: "loading" });
   const [open, setOpen] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
   const addButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchProduct()
+      .then((product) => {
+        if (!cancelled) {
+          setState({ status: "ready", product });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setState({ status: "error" });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [retryKey]);
+
+  function handleRetry() {
+    setState({ status: "loading" });
+    setRetryKey((key) => key + 1);
+  }
 
   function handleClose() {
     setOpen(false);
@@ -16,32 +56,64 @@ export default function ProductPage() {
     });
   }
 
-  return (
-    <main className="mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center px-4 py-12 sm:px-6">
-      <article className="rounded-md border-[3px] border-border bg-card p-6 shadow-[4px_4px_0_0_var(--border)] sm:p-8">
-        <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold leading-tight text-border sm:text-4xl">
-          {SHELF.name}
-        </h1>
-        <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-          {SHELF.description}
+  if (state.status === "loading") {
+    return (
+      <main className="mx-auto w-full max-w-[960px] px-4 py-10">
+        <p role="status">Loading product…</p>
+      </main>
+    );
+  }
+
+  if (state.status === "error") {
+    return (
+      <main className="mx-auto w-full max-w-[960px] px-4 py-10">
+        <p role="alert" className="text-error">
+          Could not load the product
         </p>
-        <div className="mt-5 flex items-center justify-between gap-4">
-          <p className="text-2xl font-semibold text-border">
-            {formatUsd(SHELF.price)}
+        <button
+          type="button"
+          onClick={handleRetry}
+          className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Try again
+        </button>
+      </main>
+    );
+  }
+
+  const { product } = state;
+
+  return (
+    <main className="mx-auto w-full max-w-[960px] px-4 py-10 lg:py-14">
+      <article className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start lg:gap-10">
+        <div
+          role="img"
+          aria-label={product.name}
+          className="aspect-[4/3] w-full bg-placeholder"
+        />
+
+        <div>
+          <h1 className="text-2xl font-bold leading-tight lg:text-[32px]">
+            {product.name}
+          </h1>
+          <p className="mt-3 text-base leading-7 text-muted">
+            {product.description}
+          </p>
+          <p className="mt-4 text-xl font-semibold lg:text-2xl">
+            {formatUsd(product.priceCents)}
           </p>
           <button
             ref={addButtonRef}
             type="button"
             onClick={() => setOpen(true)}
-            className="inline-flex shrink-0 items-center gap-2 rounded-md border-[2px] border-border bg-cta px-5 py-2.5 text-sm font-bold tracking-wide text-white uppercase shadow-[3px_3px_0_0_var(--border)] transition hover:bg-cta-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border"
+            className="mt-6 flex min-h-11 w-full items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary lg:inline-flex lg:w-auto"
           >
-            <HiOutlineShoppingCart aria-hidden="true" className="size-4" />
             Add to order
           </button>
         </div>
       </article>
 
-      <OrderDialog open={open} onClose={handleClose} />
+      <OrderDialog open={open} onClose={handleClose} product={product} />
     </main>
   );
 }
